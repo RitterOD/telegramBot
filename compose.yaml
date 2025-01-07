@@ -1,0 +1,42 @@
+services:
+  postgres:
+    container_name: postgres_container
+    image: 'postgres:16.3'
+    environment:
+      - 'POSTGRES_DB=bot_app'
+      - 'POSTGRES_PASSWORD=dev'
+      - 'POSTGRES_USER=dev'
+    ports:
+      - "5433:5432"
+    volumes:
+      -  bot_app_postgres:/var/lib/postgresql/data
+    networks:
+      - bot_app
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:7.2
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "habrpguser@habr.com"
+      PGADMIN_DEFAULT_PASSWORD: "dev"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+    networks:
+      - bot_app
+
+volumes:
+  bot_app_postgres:
+  pgadmin-data:
+
+networks:
+  bot_app:
+    driver: bridge
