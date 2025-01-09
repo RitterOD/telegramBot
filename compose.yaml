@@ -32,6 +32,20 @@ services:
           memory: 1G
     networks:
       - bot_app
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3000:3000
 
 volumes:
   bot_app_postgres:
