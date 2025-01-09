@@ -1,0 +1,3 @@
+spring.config.activate.on-profile=dev
+# get from telegram bot father
+telegram.bot.token=<BOT-TOKEN>
