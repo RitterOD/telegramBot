@@ -14,13 +14,13 @@ public class Translation {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(name = "fromLang")
+    @Column(name = "from_lang")
     @Enumerated(value = EnumType.STRING)
     private LangCode from;
 
-    @Column(name = "toLang")
+    @Column(name = "to_lang")
     @Enumerated(value = EnumType.STRING)
-    private LangCode tu;
+    private LangCode to;
 
 
     @Column(name = "word", nullable = false)
@@ -69,11 +69,11 @@ public class Translation {
     }
 
     public LangCode getTu() {
-        return tu;
+        return to;
     }
 
-    public void setTu(LangCode tu) {
-        this.tu = tu;
+    public void setTu(LangCode to) {
+        this.to = to;
     }
 
     public String getWord() {
