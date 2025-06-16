@@ -23,10 +23,10 @@ public class Translation {
     private LangCode to;
 
 
-    @Column(name = "word", nullable = false)
+    @Column(name = "word", nullable = false, unique = true)
     private String word;
 
-    @Column(name = "word_transcription", nullable = false)
+    @Column(name = "word_transcription", nullable = true)
     private String wordTranscription;
 
     @Column(name = "translation", nullable = false)
