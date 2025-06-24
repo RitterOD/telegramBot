@@ -1,4 +1,4 @@
-CREATE
+CREATE TABLE
 telegram_user
 (
     id uuid NOT NULL,
@@ -8,7 +8,7 @@ telegram_user
 );
 
 
-CREATE word
+CREATE TABLE word
 (
     id uuid NOT NULL,
     from_lang character varying(255),
