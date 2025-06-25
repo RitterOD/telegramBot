@@ -1,6 +1,6 @@
-package org.maslov.bot.app.games.random.model;
+package org.maslov.bot.app.games.model;
 
-public class GameStageResult {
+public class DefaultGameStageResult {
     private Number points;
 
     public Number getPoints() {
