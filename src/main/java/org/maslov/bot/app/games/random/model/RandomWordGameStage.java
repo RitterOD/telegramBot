@@ -3,13 +3,22 @@ package org.maslov.bot.app.games.random.model;
 import org.maslov.bot.app.games.model.GameStage;
 
 public class RandomWordGameStage implements GameStage {
-    private Translation translation;
+    private RandomGameTranslation randomGameTranslation;
+    private Direction direction;
 
-    public Translation getTranslation() {
-        return translation;
+    public Direction getDirection() {
+        return direction;
     }
 
-    public void setTranslation(Translation translation) {
-        this.translation = translation;
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    public RandomGameTranslation getTranslation() {
+        return randomGameTranslation;
+    }
+
+    public void setTranslation(RandomGameTranslation randomGameTranslation) {
+        this.randomGameTranslation = randomGameTranslation;
     }
 }

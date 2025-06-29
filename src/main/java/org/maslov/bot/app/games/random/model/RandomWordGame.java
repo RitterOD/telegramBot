@@ -7,5 +7,8 @@ import java.util.List;
 
 public class RandomWordGame implements Game {
     private List<RandomWordGameStage> randomWordGameStages;
-    private List<DefaultGameStageResult> gameStageResults;
+
+    public RandomWordGame(List<RandomWordGameStage> randomWordGameStages) {
+        this.randomWordGameStages = randomWordGameStages;
+    }
 }

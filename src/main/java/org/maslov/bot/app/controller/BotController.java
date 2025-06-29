@@ -1,8 +1,10 @@
 package org.maslov.bot.app.controller;
 
 import org.maslov.bot.app.dao.repository.TelegramUserRepository;
+import org.maslov.bot.app.games.random.RandomGameService;
 import org.maslov.bot.app.model.TelegramUser;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,16 +16,19 @@ import java.util.List;
 @RestController
 public class BotController {
 
-    public BotController(TelegramUserRepository telegramUserRepository) {
+    public BotController(TelegramUserRepository telegramUserRepository, RandomGameService randomGameService) {
         this.telegramUserRepository = telegramUserRepository;
+        this.randomGameService = randomGameService;
     }
 
-    private TelegramUserRepository telegramUserRepository;
+    private final TelegramUserRepository telegramUserRepository;
+
+    private final RandomGameService randomGameService;
 
     /**
      * Test endpoint for development and debug
      * */
-    @RequestMapping("/bot")
+    @GetMapping("/bot")
     public String probe() {
         return "test response";
     }
@@ -31,6 +36,12 @@ public class BotController {
     @RequestMapping("/users")
     public ResponseEntity<List<TelegramUser>> getUsers() {
         return ResponseEntity.ok(telegramUserRepository.findAll());
+    }
+
+    @GetMapping("/random-game")
+    public ResponseEntity<?> getRandomGame() {
+        randomGameService.creatRandomGame();
+        return ResponseEntity.ok().build();
     }
 
 }
