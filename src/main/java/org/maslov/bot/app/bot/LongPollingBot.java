@@ -1,5 +1,7 @@
 package org.maslov.bot.app.bot;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -9,13 +11,17 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.util.List;
 
+@Service
 public class LongPollingBot implements LongPollingSingleThreadUpdateConsumer {
 
     private final String botToken;
     private TelegramClient telegramClient;
 
+    public String getBotToken() {
+        return botToken;
+    }
 
-    public LongPollingBot(String botToken) {
+    public LongPollingBot(@Value("${telegram.bot.token:tokenStub}") String botToken) {
         this.botToken = botToken;
         telegramClient = new OkHttpTelegramClient(botToken);
     }

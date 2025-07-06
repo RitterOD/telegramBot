@@ -1,7 +1,6 @@
 package org.maslov.bot.app.bot;
 
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -15,13 +14,14 @@ public class BotInitService {
 
     private TelegramBotsLongPollingApplication botsApplication;
 
-    private final String botToken;
 
-    public BotInitService(@Value("${telegram.bot.token:tokenStub}") String botToken) {
-        this.botToken = botToken;
+    private final LongPollingBot longPollingBot;
+
+    public BotInitService(LongPollingBot longPollingBot) {
+        this.longPollingBot = longPollingBot;
         botsApplication = new TelegramBotsLongPollingApplication();
         try {
-            botsApplication.registerBot(botToken, new LongPollingBot(botToken));
+            botsApplication.registerBot(longPollingBot.getBotToken(), longPollingBot);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
