@@ -41,7 +41,7 @@ public class RandomWordGame implements Game {
 
     public boolean incrementStage() {
         ++stageNum;
-        if (stageNum > randomWordGameStages.size()) {
+        if (stageNum >= randomWordGameStages.size()) {
             return true;
         } else {
             return false;
