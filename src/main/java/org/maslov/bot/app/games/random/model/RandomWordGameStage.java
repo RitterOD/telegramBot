@@ -44,7 +44,9 @@ public class RandomWordGameStage implements GameStage {
         if (gameStageResult.getPoints().intValue() > 0) {
             return "правильный ответ";
         } else {
-            return "ошибка";
+            var rightAnswer = (direction == Direction.FROM ? randomGameTranslation.getTranslation()
+                    : randomGameTranslation.getWord());
+            return "ошибка. правильный ответ: " + rightAnswer ;
         }
     }
 

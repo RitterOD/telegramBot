@@ -36,11 +36,11 @@ public class DefaultGamePlayer implements GamePlayer {
             var finish = game.incrementStage();
             String nextText;
             if (finish) {
-
+                nextText = game.getFinishMessage();
             } else {
-
+                nextText = game.getCurrentStageMessage();
             }
-            nextText = game.getCurrentStageMessage();
+
             return List.of(buildMessage(chatId, resultText), buildMessage(chatId, nextText));
         } else if (update.getMessage().hasText()) {
             var text = update.getMessage().getText();
