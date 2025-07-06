@@ -13,9 +13,9 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
-public class DefaultRandomGameService implements RandomGameService{
+public class DefaultRandomGameService implements RandomGameService {
 
-    public static final long DEFAULT_RANDOM_GAME_AMOUNT = 10L;
+    public static final long DEFAULT_RANDOM_GAME_AMOUNT = 5L;
     private final TranslationRepository translationRepository;
     private final ModelMapper modelMapper;
     private final Random random;

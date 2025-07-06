@@ -1,5 +1,6 @@
 package org.maslov.bot.app.bot;
 
+import org.maslov.bot.app.games.GamePlayer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
@@ -17,13 +18,16 @@ public class LongPollingBot implements LongPollingSingleThreadUpdateConsumer {
     private final String botToken;
     private TelegramClient telegramClient;
 
+    private final GamePlayer gamePlayer;
+
     public String getBotToken() {
         return botToken;
     }
 
-    public LongPollingBot(@Value("${telegram.bot.token:tokenStub}") String botToken) {
+    public LongPollingBot(@Value("${telegram.bot.token:tokenStub}") String botToken, GamePlayer gamePlayer) {
         this.botToken = botToken;
         telegramClient = new OkHttpTelegramClient(botToken);
+        this.gamePlayer = gamePlayer;
     }
 
     @Override
@@ -37,17 +41,17 @@ public class LongPollingBot implements LongPollingSingleThreadUpdateConsumer {
             // Set variables
             String message_text = update.getMessage().getText();
             long chat_id = update.getMessage().getChatId();
+            var msgs = gamePlayer.consume(update);
+            msgs.forEach(
+                    msg -> {
+                        try {
+                            telegramClient.execute(msg);
+                        } catch (TelegramApiException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+            );
 
-            SendMessage message = SendMessage // Create a message object
-                    .builder()
-                    .chatId(chat_id)
-                    .text(message_text)
-                    .build();
-            try {
-                telegramClient.execute(message); // Sending our message object to user
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
         }
     }
 }

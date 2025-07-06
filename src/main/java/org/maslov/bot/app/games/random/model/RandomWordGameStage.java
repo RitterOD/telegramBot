@@ -7,6 +7,8 @@ public class RandomWordGameStage implements GameStage {
     private RandomGameTranslation randomGameTranslation;
     private Direction direction;
 
+    private GameStageResult gameStageResult;
+
     public Direction getDirection() {
         return direction;
     }
@@ -34,7 +36,8 @@ public class RandomWordGameStage implements GameStage {
         var rightAnswer = (direction == Direction.FROM ? randomGameTranslation.getTranslation()
                 : randomGameTranslation.getWord());
         var isRight = rightAnswer.equalsIgnoreCase(answer);
-        return new RandomGameStageResult(isRight ? 1 : 0);
+        this.gameStageResult = new RandomGameStageResult(isRight ? 1 : 0);
+        return this.gameStageResult;
     }
 
     public String getAnswerMessage(GameStageResult gameStageResult) {
@@ -43,5 +46,9 @@ public class RandomWordGameStage implements GameStage {
         } else {
             return "ошибка";
         }
+    }
+
+    public GameStageResult getGameStageResult() {
+        return gameStageResult;
     }
 }
