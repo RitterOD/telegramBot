@@ -1,7 +1,10 @@
 package org.maslov.bot.app.model;
 
 import jakarta.persistence.*;
+import org.maslov.bot.app.model.tag.TranslationToTagLink;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -32,6 +35,9 @@ public class Translation {
     @Column(name = "translation", nullable = false)
     private String translation;
 
+    @OneToMany(mappedBy = "translation")
+    private Set<TranslationToTagLink> translationToTagLinks = new LinkedHashSet<>();
+
 
     public String getWordTranscription() {
         return wordTranscription;
@@ -51,6 +57,14 @@ public class Translation {
 
     @Column(name = "translation_transcriprion", nullable = false)
     private String translationTranscription;
+
+    public Set<TranslationToTagLink> getTranslationToTagLinks() {
+        return translationToTagLinks;
+    }
+
+    public void setTranslationToTagLinks(Set<TranslationToTagLink> translationToTagLinks) {
+        this.translationToTagLinks = translationToTagLinks;
+    }
 
     public UUID getId() {
         return id;
