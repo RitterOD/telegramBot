@@ -32,6 +32,7 @@ services:
           memory: 1G
     networks:
       - bot_app
+
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -39,6 +40,8 @@ services:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - 9090:9090
+    networks:
+      - bot_app
 #    extra_hosts:    # ERROR !!! uncoment on LINUX ?
 #      - "host.docker.internal:172.17.0.1"
   grafana:
@@ -54,13 +57,15 @@ services:
       - bot_app
     links:
       - prometheus
+    depends_on:
+      - prometheus
     volumes:
-      - grafana_data:/var/lib/grafana
+      - grafana_data_bot:/var/lib/grafana
 
 volumes:
   bot_app_postgres:
   pgadmin-data:
-  grafana_data:
+  grafana_data_bot:
 
 networks:
   bot_app:
