@@ -21,4 +21,20 @@ public abstract class CommonFields {
     @Column(name = "row_updated")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updated;
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
 }
