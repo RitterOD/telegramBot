@@ -4,13 +4,16 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
+import org.maslov.bot.app.model.base.CommonFields;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "tag_to_tag_link")
-public class TagToTagLink {
+@EntityListeners(AuditingEntityListener.class)
+public class TagToTagLink extends CommonFields {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)

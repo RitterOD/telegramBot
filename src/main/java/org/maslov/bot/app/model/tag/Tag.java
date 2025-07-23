@@ -1,12 +1,15 @@
 package org.maslov.bot.app.model.tag;
 
 import jakarta.persistence.*;
+import org.maslov.bot.app.model.base.CommonFields;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.*;
 
 @Entity
 @Table(name = Tag.TABLE_NAME)
-public class Tag {
+@EntityListeners(AuditingEntityListener.class)
+public class Tag extends CommonFields {
 
     public static final String TABLE_NAME = "translation_tag";
     @Id

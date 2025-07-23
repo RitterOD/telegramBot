@@ -29,7 +29,7 @@ public class Translation {
     @Column(name = "word", nullable = false, unique = true)
     private String word;
 
-    @Column(name = "word_transcription", nullable = true)
+    @Column(name = "word_transcription")
     private String wordTranscription;
 
     @Column(name = "translation", nullable = false)

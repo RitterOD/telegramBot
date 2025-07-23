@@ -5,13 +5,16 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 import org.maslov.bot.app.model.Translation;
+import org.maslov.bot.app.model.base.CommonFields;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = TranslationToTagLink.TABLE_NAME)
-public class TranslationToTagLink {
+@EntityListeners(AuditingEntityListener.class)
+public class TranslationToTagLink extends CommonFields {
     public static final String TABLE_NAME = "translation_to_tag_link";
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
