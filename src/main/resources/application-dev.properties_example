@@ -2,3 +2,4 @@ spring.config.activate.on-profile=dev
 # get from telegram bot father
 telegram.bot.token=<BOT-TOKEN>
 spring.jpa.hibernate.ddl-auto=update
+management.endpoints.web.exposure.include=health,metrics,prometheus
