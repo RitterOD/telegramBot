@@ -37,6 +37,7 @@ public class DefaultGamePlayer implements GamePlayer {
             String nextText;
             if (finish) {
                 nextText = game.getFinishMessage();
+                gameMap.remove(userId);
             } else {
                 nextText = game.getCurrentStageMessage();
             }
