@@ -39,17 +39,28 @@ services:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - 9090:9090
-    extra_hosts:
-      - "host.docker.internal:172.17.0.1"
+#    extra_hosts:    # ERROR !!! uncoment on LINUX ?
+#      - "host.docker.internal:172.17.0.1"
   grafana:
-    image: grafana/grafana
-    container_name: grafana
+    image: grafana/grafana:12.0.2
+    container_name: grafana_with_mon
+    environment:
+      - GF_SECURITY_ADMIN_USER=dev
+      - GF_SECURITY_ADMIN_PASSWORD=dev
+      - GF_USERS_ALLOW_SIGN_UP=false
     ports:
       - 3000:3000
+    networks:
+      - bot_app
+    links:
+      - prometheus
+    volumes:
+      - grafana_data:/var/lib/grafana
 
 volumes:
   bot_app_postgres:
   pgadmin-data:
+  grafana_data:
 
 networks:
   bot_app:
