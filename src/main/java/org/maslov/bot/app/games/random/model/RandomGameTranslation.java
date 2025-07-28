@@ -1,15 +1,28 @@
 package org.maslov.bot.app.games.random.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.maslov.bot.app.model.LangCode;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class RandomGameTranslation {
+public class RandomGameTranslation implements Serializable {
+    @JsonProperty
     private UUID id;
+    @JsonProperty
     private LangCode from;
+
+    @JsonProperty
     private LangCode to;
+
+    @JsonProperty
     private String word;
+
+    @JsonProperty
     private String wordTranscription;
+
+    @JsonProperty
     private String translation;
 
     public UUID getId() {

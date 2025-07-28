@@ -1,12 +1,22 @@
 package org.maslov.bot.app.games.random.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.maslov.bot.app.games.model.GameStage;
 import org.maslov.bot.app.games.model.GameStageResult;
 
-public class RandomWordGameStage implements GameStage {
+import java.io.Serializable;
+
+public class RandomWordGameStage implements GameStage, Serializable {
+
+    @JsonProperty
     private RandomGameTranslation randomGameTranslation;
+
+    @JsonProperty
     private Direction direction;
 
+    @JsonProperty
     private GameStageResult gameStageResult;
 
     public Direction getDirection() {
@@ -25,6 +35,7 @@ public class RandomWordGameStage implements GameStage {
         this.randomGameTranslation = randomGameTranslation;
     }
 
+    @JsonIgnore
     public String getInitialStageMessage() {
         var word = direction == Direction.FROM ? randomGameTranslation.getWord() :
                 randomGameTranslation.getTranslation();
@@ -32,6 +43,7 @@ public class RandomWordGameStage implements GameStage {
         return "Переведите слово: " + word;
     }
 
+    @JsonIgnore
     public GameStageResult handleAnswer(String answer) {
         var rightAnswer = (direction == Direction.FROM ? randomGameTranslation.getTranslation()
                 : randomGameTranslation.getWord());
@@ -40,6 +52,7 @@ public class RandomWordGameStage implements GameStage {
         return this.gameStageResult;
     }
 
+    @JsonIgnore
     public String getAnswerMessage(GameStageResult gameStageResult) {
         if (gameStageResult.getPoints().intValue() > 0) {
             return "правильный ответ";

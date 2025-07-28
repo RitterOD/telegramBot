@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.maslov.bot.app.games.model.Activity;
+import org.maslov.bot.app.games.random.model.RandomWordGame;
 
 import java.util.UUID;
 

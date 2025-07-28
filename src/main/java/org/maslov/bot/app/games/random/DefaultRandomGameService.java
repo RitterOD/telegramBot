@@ -1,7 +1,9 @@
 package org.maslov.bot.app.games.random;
 
 import org.maslov.bot.app.dao.repository.TranslationRepository;
+import org.maslov.bot.app.games.model.Activity;
 import org.maslov.bot.app.games.random.model.Direction;
+import org.maslov.bot.app.games.random.model.RandomGameState;
 import org.maslov.bot.app.games.random.model.RandomGameTranslation;
 import org.maslov.bot.app.games.random.model.RandomWordGame;
 import org.maslov.bot.app.games.random.model.RandomWordGameStage;
@@ -31,6 +33,66 @@ public class DefaultRandomGameService implements RandomGameService {
         var lst = translationRepository.findRandomN(DEFAULT_RANDOM_GAME_AMOUNT);
         var rv = new RandomWordGame(lst.stream().map(this::generateRandomStage).collect(Collectors.toList()));
         return rv;
+    }
+
+    @Override
+    public String getInitialMessage(Activity activity) {
+        if (activity instanceof RandomWordGame g) {
+            return g.getInitialMessage() + "\n" + g.getCurrentStageMessage();
+        } else {
+            throw new RuntimeException("Wrong type of activity");
+        }
+    }
+
+    @Override
+    public Activity setState(Activity activity, RandomGameState state) {
+        if (activity instanceof RandomWordGame g) {
+            g.setState(state);
+            return g;
+        } else {
+            throw new RuntimeException("Wrong type of activity");
+        }
+    }
+
+    @Override
+    public RandomGameState getInitialActivityState() {
+        return RandomGameState.IN_PROGRESS;
+    }
+
+    @Override
+    public String handleCurrentStateMessage(Activity activity, String message) {
+        if (activity instanceof RandomWordGame g) {
+            return g.handleCurrentStateMessage(message);
+        } else {
+            throw new RuntimeException("Wrong type of activity");
+        }
+    }
+
+    @Override
+    public boolean incrementStage(Activity activity) {
+        if (activity instanceof RandomWordGame g) {
+            return g.incrementStage();
+        } else {
+            throw new RuntimeException("Wrong type of activity");
+        }
+    }
+
+    @Override
+    public String getFinishMessage(Activity activity) {
+        if (activity instanceof RandomWordGame g) {
+            return g.getFinishMessage();
+        } else {
+            throw new RuntimeException("Wrong type of activity");
+        }
+    }
+
+    @Override
+    public String getCurrentStageMessage(Activity activity) {
+        if (activity instanceof RandomWordGame g) {
+            return g.getCurrentStageMessage();
+        } else {
+            throw new RuntimeException("Wrong type of activity");
+        }
     }
 
     private RandomWordGameStage generateRandomStage(Translation translation) {
