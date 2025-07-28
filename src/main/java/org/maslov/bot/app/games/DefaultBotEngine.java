@@ -1,8 +1,11 @@
 package org.maslov.bot.app.games;
 
+import lombok.extern.slf4j.Slf4j;
 import org.maslov.bot.app.games.random.RandomGameService;
 import org.maslov.bot.app.games.random.model.RandomGameState;
 import org.maslov.bot.app.games.random.model.RandomWordGame;
+import org.maslov.bot.app.model.TelegramUser;
+import org.maslov.bot.app.service.user.TelegramUserService;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -12,7 +15,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class DefaultGamePlayer implements GamePlayer {
+@Slf4j
+public class DefaultBotEngine implements BotEngine {
 
     private static final String HELLO_MSG = "Чтобы начать игру в слова команда /start. \nЧтобы закончить команда /stop";
     private static final String START_CMD = "/start";
@@ -20,15 +24,19 @@ public class DefaultGamePlayer implements GamePlayer {
     private final Map<Long, RandomWordGame> gameMap = new ConcurrentHashMap<>();
 
     private final RandomGameService randomGameService;
+    private final TelegramUserService telegramUserService;
 
-    public DefaultGamePlayer(RandomGameService randomGameService) {
+    public DefaultBotEngine(RandomGameService randomGameService, TelegramUserService telegramUserService) {
         this.randomGameService = randomGameService;
+        this.telegramUserService = telegramUserService;
     }
 
 
     /* TODO Fix command handling errors*/
-    public List<SendMessage> consume(Update update) {
+    public List<SendMessage> consume(final Update update) {
         final var userId = update.getMessage().getFrom().getId();
+        var tlgUser = fetchOrCreateTelegramUser(update);
+        log.info("Message from tlg user uuid: {} tlgId:{}", tlgUser.getId(), tlgUser.getTelegramId());
         final var chatId = update.getMessage().getChatId();
         if (gameMap.containsKey(userId)) {
             var game = gameMap.get(userId);
@@ -79,6 +87,14 @@ public class DefaultGamePlayer implements GamePlayer {
                 .chatId(update.getMessage().getChatId())
                 .text("")
                 .build());
+    }
+
+    private TelegramUser fetchOrCreateTelegramUser(final Update update) {
+        final var userId = update.getMessage().getFrom().getId();
+        return telegramUserService.findUserByTelegramId(userId).orElseGet(() -> {
+            var user =   update.getMessage().getFrom();
+            return telegramUserService.save(userId, user.getFirstName(), user.getUserName(), user.getLanguageCode());
+        });
     }
 
     private SendMessage buildMessage(Long chatId, String text) {
