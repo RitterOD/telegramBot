@@ -1,6 +1,6 @@
 package org.maslov.bot.app.dao.repository;
 
-import org.maslov.bot.app.model.TelegramUser;
+import org.maslov.bot.app.model.user.TelegramUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

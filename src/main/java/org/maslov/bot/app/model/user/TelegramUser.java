@@ -1,9 +1,10 @@
-package org.maslov.bot.app.model;
+package org.maslov.bot.app.model.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.maslov.bot.app.model.LangCode;
 
 import java.util.UUID;
 
@@ -31,6 +32,20 @@ public class TelegramUser {
     @Enumerated(value = EnumType.STRING)
     private LangCode langCode;
 
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @PrimaryKeyJoinColumn
+    private UserState state;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+
+    public UserState getState() {
+        return state;
+    }
+
+
     public LangCode getLangCode() {
         return langCode;
     }
@@ -39,8 +54,7 @@ public class TelegramUser {
         this.langCode = langCode;
     }
 
-    @Column(name = "first_name")
-    private String firstName;
+
 
     public String getFirstName() {
         return firstName;
@@ -72,5 +86,12 @@ public class TelegramUser {
 
     public void setTelegramUserName(String telegramUserName) {
         this.telegramUserName = telegramUserName;
+    }
+
+
+    public TelegramUser setState(UserState userState) {
+        this.state = userState;
+        userState.setUser(this);
+        return this;
     }
 }

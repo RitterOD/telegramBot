@@ -1,13 +1,12 @@
 package org.maslov.bot.app.games.random.model;
 
-import org.maslov.bot.app.games.model.DefaultGameStageResult;
-import org.maslov.bot.app.games.model.Game;
+import org.maslov.bot.app.games.model.Activity;
 import org.maslov.bot.app.games.model.GameStageResult;
 
 import java.util.List;
 import java.util.Objects;
 
-public class RandomWordGame implements Game {
+public class RandomWordGame implements Activity {
 
     private RandomGameState state;
     private int stageNum;
