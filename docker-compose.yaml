@@ -16,14 +16,16 @@ services:
   pgadmin:
     container_name: pgadmin_container
     image: dpage/pgadmin4:7.2
+    labels:
+      - "traefik.http.routers.pgadmin.rule=Host(`pgadmin2.localhost`)"
     environment:
       PGADMIN_DEFAULT_EMAIL: "habrpguser@habr.com"
       PGADMIN_DEFAULT_PASSWORD: "dev"
       PGADMIN_CONFIG_SERVER_MODE: "False"
     volumes:
       - pgadmin-data:/var/lib/pgadmin
-    ports:
-      - "5050:80"
+#    ports:
+#      - "5050:80"
     restart: unless-stopped
     deploy:
       resources:
@@ -47,12 +49,16 @@ services:
   grafana:
     image: grafana/grafana:12.0.2
     container_name: grafana_with_mon
+    labels:
+      - "traefik.http.routers.grafana.rule=Host(`grafana2.localhost`)"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+      - "traefik.docker.network=bot_app"
     environment:
       - GF_SECURITY_ADMIN_USER=dev
       - GF_SECURITY_ADMIN_PASSWORD=dev
       - GF_USERS_ALLOW_SIGN_UP=false
-    ports:
-      - 3000:3000
+#    ports:
+#      - 3000:3000
     networks:
       - bot_app
     links:
@@ -61,6 +67,19 @@ services:
       - prometheus
     volumes:
       - grafana_data_bot:/var/lib/grafana
+  traefik:
+    image: traefik:v3.5
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "11180:8080"
+    networks:
+      - bot_app
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   bot_app_postgres:
