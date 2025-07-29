@@ -1,11 +1,26 @@
 services:
+  bot-app:
+    build: ..
+    labels:
+      - "traefik.http.routers.bot-app.rule=Host(`bot.${HOST}`)"
+      - "traefik.http.services.bot-app.loadbalancer.server.port=8080"
+      - "traefik.docker.network=bot_app"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${PG_DB}
+      SPRING_DATASOURCE_USERNAME: ${PG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${PG_PASSWORD}
+    depends_on:
+      - postgres #
+    networks:
+      - bot_app
+
   postgres:
     container_name: postgres_bot
     image: 'postgres:16.3'
     environment:
       - 'POSTGRES_DB=${PG_DB}'
-      - 'POSTGRES_PASSWORD=${PG_PASSWORD}'
       - 'POSTGRES_USER=${PG_USER}'
+      - 'POSTGRES_PASSWORD=${PG_PASSWORD}'
     volumes:
       -  bot_app_postgres:/var/lib/postgresql/data
     networks:
