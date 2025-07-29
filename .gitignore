@@ -33,3 +33,4 @@ build/
 .vscode/
 /src/main/resources/application-dev.properties
 /prod/.env
+/prod/traefik/traefik.yaml

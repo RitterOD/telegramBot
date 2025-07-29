@@ -2,7 +2,7 @@ services:
   bot-app:
     build: ..
     labels:
-      - "traefik.http.routers.bot-app.rule=Host(`bot.${HOST}`)"
+      - "traefik.http.routers.bot-app.rule=Host(`${HOST}`)"
       - "traefik.http.services.bot-app.loadbalancer.server.port=8080"
       - "traefik.docker.network=bot_app"
     environment:
@@ -81,18 +81,18 @@ services:
   traefik:
     image: traefik:v3.5
     container_name: traefik_bot
-    command:
-      - --log.level=DEBUG
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--entrypoints.web.address=:80"
     ports:
-      - "80:80"
-      - "11180:8080"
+      - 80:80
+      - 443:443
     networks:
       - bot_app
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /run/docker.sock:/run/docker.sock:ro
+      - ./traefik/:/etc/traefik/:ro
+      - ./certs/:/var/traefik/certs/:rw
+    environment:
+      - CF_DNS_API_TOKEN=your-cloudflare-api-token  # <-- Change this to your Cloudflare API Token
+    restart: unless-stopped
 
 volumes:
   bot_app_postgres:
