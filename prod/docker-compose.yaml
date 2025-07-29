@@ -1,0 +1,89 @@
+services:
+  postgres:
+    container_name: postgres_bot
+    image: 'postgres:16.3'
+    environment:
+      - 'POSTGRES_DB=${PG_DB}'
+      - 'POSTGRES_PASSWORD=${PG_PASSWORD}'
+      - 'POSTGRES_USER=${PG_USER}'
+    volumes:
+      -  bot_app_postgres:/var/lib/postgresql/data
+    networks:
+      - bot_app
+
+  pgadmin:
+    container_name: pgadmin_bot
+    image: dpage/pgadmin4:7.2
+    labels:
+      - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.${HOST}`)"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADM_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADM_DEFAULT_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: ${PGADM_CONFIG_SERVER_MODE}
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 0.5G
+    networks:
+      - bot_app
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    container_name: prometheus_bot
+    labels:
+      - "traefik.http.routers.prometheus.rule=Host(`prometheus.${HOST}`)"
+      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+      - "traefik.docker.network=bot_app"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - bot_app
+
+  grafana:
+    image: grafana/grafana:12.0.2
+    container_name: grafana_bot
+    labels:
+      - "traefik.http.routers.grafana.rule=Host(`grafana.${HOST}`)"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+      - "traefik.docker.network=bot_app"
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=${GF_USERS_ALLOW_SIGN_UP}
+    networks:
+      - bot_app
+    links:
+      - prometheus
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana_data_bot:/var/lib/grafana
+
+  traefik:
+    image: traefik:v3.5
+    container_name: traefik_bot
+    command:
+      - --log.level=DEBUG
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "11180:8080"
+    networks:
+      - bot_app
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  bot_app_postgres:
+  pgadmin-data:
+  grafana_data_bot:
+
+networks:
+  bot_app:
+    driver: bridge
