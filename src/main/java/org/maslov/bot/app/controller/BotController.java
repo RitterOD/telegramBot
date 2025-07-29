@@ -2,7 +2,7 @@ package org.maslov.bot.app.controller;
 
 import org.maslov.bot.app.dao.repository.TelegramUserRepository;
 import org.maslov.bot.app.games.random.RandomGameService;
-import org.maslov.bot.app.model.user.TelegramUser;
+import org.maslov.bot.app.model.tlg.user.TelegramUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

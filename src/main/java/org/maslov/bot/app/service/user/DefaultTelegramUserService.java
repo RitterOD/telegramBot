@@ -2,9 +2,9 @@ package org.maslov.bot.app.service.user;
 
 import org.maslov.bot.app.dao.repository.TelegramUserRepository;
 import org.maslov.bot.app.model.LangCode;
-import org.maslov.bot.app.model.user.TelegramUser;
-import org.maslov.bot.app.model.user.UserState;
-import org.maslov.bot.app.model.user.UserStatus;
+import org.maslov.bot.app.model.tlg.user.TelegramUser;
+import org.maslov.bot.app.model.tlg.user.UserState;
+import org.maslov.bot.app.model.tlg.user.UserStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

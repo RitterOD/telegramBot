@@ -1,6 +1,6 @@
 package org.maslov.bot.app.service.user;
 
-import org.maslov.bot.app.model.user.TelegramUser;
+import org.maslov.bot.app.model.tlg.user.TelegramUser;
 
 import java.util.Optional;
 

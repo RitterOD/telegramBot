@@ -1,4 +1,4 @@
-package org.maslov.bot.app.model.user;
+package org.maslov.bot.app.model.tlg.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

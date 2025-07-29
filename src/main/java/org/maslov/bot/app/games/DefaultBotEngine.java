@@ -5,9 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.maslov.bot.app.games.model.Activity;
 import org.maslov.bot.app.games.random.RandomGameService;
 import org.maslov.bot.app.games.random.model.RandomWordGame;
-import org.maslov.bot.app.model.user.TelegramUser;
-import org.maslov.bot.app.model.user.UserState;
-import org.maslov.bot.app.model.user.UserStatus;
+import org.maslov.bot.app.model.tlg.user.TelegramUser;
+import org.maslov.bot.app.model.tlg.user.UserStatus;
 import org.maslov.bot.app.service.user.TelegramUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,62 +37,12 @@ public class DefaultBotEngine implements BotEngine {
         this.objectMapper = objectMapper;
     }
 
-@Transactional
     /* TODO Fix command handling errors*/
+    @Transactional
     public List<SendMessage> consume(final Update update) {
         final var userId = update.getMessage().getFrom().getId();
         var tlgUser = fetchOrCreateTelegramUser(update);
         log.info("Message from tlg user uuid: {} tlgId: {}", tlgUser.getId(), tlgUser.getTelegramId());
-//        final var chatId = update.getMessage().getChatId();
-//        if (gameMap.containsKey(userId)) {
-//            var game = gameMap.get(userId);
-//            String resultText = game.handleCurrentStateMessage(update.getMessage().getText());
-//            var finish = game.incrementStage();
-//            String nextText;
-//            if (finish) {
-//                nextText = game.getFinishMessage();
-//                gameMap.remove(userId);
-//            } else {
-//                nextText = game.getCurrentStageMessage();
-//            }
-//
-//            return List.of(buildMessage(chatId, resultText), buildMessage(chatId, nextText));
-//        } else if (update.getMessage().hasText()) {
-//            var text = update.getMessage().getText();
-//            if (START_CMD.equals(text)) {
-//                RandomWordGame game = randomGameService.creatRandomGame();
-//                gameMap.put(userId, game);
-//                var initialMsg = game.getInitialMessage();
-//                game.setState(RandomGameState.IN_PROGRESS);
-//                initialMsg = initialMsg + "\n" + game.getCurrentStageMessage();
-//                SendMessage message = SendMessage // Create a message object
-//                        .builder()
-//                        .chatId(update.getMessage().getChatId())
-//                        .text(initialMsg)
-//                        .build();
-//                return List.of(message);
-//
-//            } else if (STOP_CMD.equals(text)) {
-//                gameMap.remove(userId);
-//                return List.of(SendMessage // Create a message object
-//                        .builder()
-//                        .chatId(update.getMessage().getChatId())
-//                        .text("Игра прекращена")
-//                        .build());
-//            } else {
-//                SendMessage message = SendMessage // Create a message object
-//                        .builder()
-//                        .chatId(update.getMessage().getChatId())
-//                        .text(HELLO_MSG)
-//                        .build();
-//                return List.of(message);
-//            }
-//        }
-//        return List.of(SendMessage // Create a message object
-//                .builder()
-//                .chatId(update.getMessage().getChatId())
-//                .text("")
-//                .build());
         return process(tlgUser, update);
     }
 
