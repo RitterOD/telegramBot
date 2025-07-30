@@ -14,3 +14,9 @@ docker build -t ritterod/interval_bot:demo_1 .
 docker build -t interval_bot:demo_1
 
 docker-compose pull
+
+ufw allow 80,443,8080/tcp
+ufw allow 80,443,8080/udp
+
+ufw deny 80,443,8080/tcp
+ufw deny 80,443,8080/udp
