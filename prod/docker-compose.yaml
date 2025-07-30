@@ -97,7 +97,7 @@ services:
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=admin:$2a$12$vMBqg4GqKs0MNSXtXIwEuOD9RxXhGBBNMw0nQxJROr9ZS7KjJVxaC" # Replace with your actual username and hashed password
+      - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_ADMIN_USER}" # Replace with your actual username and hashed password
       - "traefik.http.routers.api.tls.certresolver=letsencrypt"
     networks:
       - bot_app
