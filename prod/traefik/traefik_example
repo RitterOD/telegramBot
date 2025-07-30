@@ -13,30 +13,30 @@ log:
 entryPoints:
   web:
     address: :80
-    http:
-       redirections:
-         entryPoint:
-           to: websecure
-           scheme: https
-  websecure:
-    address: :443
+#    http:
+#       redirections:
+#         entryPoint:
+#           to: websecure
+#           scheme: https
+#  websecure:
+#    address: :443
 
 # -- Configure your CertificateResolver here...
-certificatesResolvers:
-  cloudflare:
-    acme:
-      email: your-email@example.com  # <-- Change this to your email
-      storage: /var/traefik/certs/cloudflare-acme.json
-      caServer: "https://acme-v02.api.letsencrypt.org/directory"
-      dnsChallenge:
-        provider: cloudflare  # <-- (Optional) Change this to your DNS provider
-        resolvers:
-          - "1.1.1.1:53"
-          - "8.8.8.8:53"
+#certificatesResolvers:
+#  rucenter:
+#    acme:
+#      email: alexandermaslov090@gmail.com  # <-- Change this to your email
+#      storage: /var/traefik/certs/rucenter-acme.json
+#      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+#      dnsChallenge:
+#        provider: cloudflare  # <-- (Optional) Change this to your DNS provider
+#        resolvers:
+#          - "1.1.1.1:53"
+#          - "8.8.8.8:53"
 
-providers:
-  docker:
-    exposedByDefault: false
-  file:
-    directory: /etc/traefik
-    watch: true
+#providers:
+#  docker:
+#    exposedByDefault: false
+#  file:
+#    directory: /etc/traefik
+#    watch: true
