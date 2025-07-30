@@ -98,7 +98,7 @@ services:
       - "traefik.http.routers.api.rule=Host(`${HOST}`)"
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.service=api@internal"
-      - "traefik.http.routers.api.middlewares=auth,redirect-to-https@docker"
+      - "traefik.http.routers.api.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_ADMIN_USER}" # Replace with your actual username and hashed password
       - "traefik.http.routers.api.tls.certresolver=letsencrypt"
     networks:
