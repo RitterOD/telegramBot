@@ -1,6 +1,6 @@
 services:
   bot-app:
-    build: ..
+    image: ritterod/interval_bot:demo_1
     labels:
       - "traefik.http.routers.bot-app.rule=Host(`${HOST}`)"
       - "traefik.http.services.bot-app.loadbalancer.server.port=8080"
