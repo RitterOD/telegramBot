@@ -30,7 +30,7 @@ services:
     container_name: pgadmin_bot
     image: dpage/pgadmin4:7.2
     labels:
-      - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.${HOST}`)"
+      - "traefik.http.routers.pgadmin.rule=Host(`${PGADM_SUBDOMAIN}.${HOST}`)"
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADM_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADM_DEFAULT_PASSWORD}
@@ -50,7 +50,7 @@ services:
     image: prom/prometheus:v3.5.0
     container_name: prometheus_bot
     labels:
-      - "traefik.http.routers.prometheus.rule=Host(`prometheus.${HOST}`)"
+      - "traefik.http.routers.prometheus.rule=Host(`${PROMETHEUS_SUBDOMAIN}.${HOST}`)"
       - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
       - "traefik.docker.network=bot_app"
     volumes:
@@ -62,7 +62,7 @@ services:
     image: grafana/grafana:12.0.2
     container_name: grafana_bot
     labels:
-      - "traefik.http.routers.grafana.rule=Host(`grafana.${HOST}`)"
+      - "traefik.http.routers.grafana.rule=Host(`${GRAFANA_SUBDOMAIN}.${HOST}`)"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
       - "traefik.docker.network=bot_app"
     environment:
@@ -86,7 +86,6 @@ services:
       - "--entrypoints.web.address=:80"
     ports:
       - "80:80"
-      - "11180:8080"
     networks:
       - bot_app
     volumes:
