@@ -31,6 +31,7 @@ services:
     image: dpage/pgadmin4:7.2
     labels:
       - "traefik.http.routers.pgadmin.rule=Host(`${PGADM_SUBDOMAIN}.${HOST}`)"
+      - "traefik.http.routers.pgadmin.middlewares=auth"
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADM_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADM_DEFAULT_PASSWORD}
@@ -51,6 +52,7 @@ services:
     container_name: prometheus_bot
     labels:
       - "traefik.http.routers.prometheus.rule=Host(`${PROMETHEUS_SUBDOMAIN}.${HOST}`)"
+      - "traefik.http.routers.prometheus.middlewares=auth"
       - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
       - "traefik.docker.network=bot_app"
     volumes:
