@@ -12,12 +12,12 @@ import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
-import org.telegram.telegrambots.webhook.TelegramWebhookBot;
+
 
 @Service
 @Profile("prod")
 @Slf4j
-public class WebHookBot implements TelegramWebhookBot {
+public class WebHookBot {
 
     private final TelegramClient telegramClient;
 
@@ -31,7 +31,7 @@ public class WebHookBot implements TelegramWebhookBot {
         log.info("Start on host: {}", host);
     }
 
-    @Override
+
     public void runDeleteWebhook() {
         try {
             telegramClient.execute(new DeleteWebhook());
@@ -40,7 +40,7 @@ public class WebHookBot implements TelegramWebhookBot {
         }
     }
 
-    @Override
+
     public void runSetWebhook() {
         try {
             var url = host + getBotPath();
@@ -54,7 +54,7 @@ public class WebHookBot implements TelegramWebhookBot {
         }
     }
 
-    @Override
+
     public BotApiMethod<?> consumeUpdate(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             var msgs = botEngine.consume(update);
@@ -71,7 +71,7 @@ public class WebHookBot implements TelegramWebhookBot {
         return null;
     }
 
-    @Override
+
     public String getBotPath() {
         return "/bot";
     }
