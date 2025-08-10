@@ -52,17 +52,25 @@ const data = {
   ],
   navMain: [
     {
-      title: "Playground",
+      title: "Main settings",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "History",
+          title: "Telegram users",
           url: "#",
         },
         {
-          title: "Starred",
+          title: "Admin users",
+          url: "#",
+        },
+        {
+          title: "Words",
+          url: "#",
+        },
+        {
+          title: "Tags",
           url: "#",
         },
         {
