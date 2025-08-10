@@ -1,12 +1,14 @@
 package org.maslov.bot.app.bot;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 
 @Service
+@Profile("dev")
 public class BotInitService {
 
     private static final org.slf4j.Logger log

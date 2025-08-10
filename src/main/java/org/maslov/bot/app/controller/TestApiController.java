@@ -13,10 +13,11 @@ import java.util.List;
 /**
  * Endpoint for telegram
  * */
-@RestController
-public class BotController {
+@RestController()
+@RequestMapping("/test")
+public class TestApiController {
 
-    public BotController(TelegramUserRepository telegramUserRepository, RandomGameService randomGameService) {
+    public TestApiController(TelegramUserRepository telegramUserRepository, RandomGameService randomGameService) {
         this.telegramUserRepository = telegramUserRepository;
         this.randomGameService = randomGameService;
     }

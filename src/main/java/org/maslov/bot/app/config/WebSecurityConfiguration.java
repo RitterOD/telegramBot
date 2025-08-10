@@ -32,13 +32,9 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                .requestMatchers("/bot/**").permitAll()
                 .anyRequest().authenticated());
         http.httpBasic(withDefaults());
-//        http.headers(AbstractHttpConfigurer::disable);
-//        http.sessionManagement(Customizer.withDefaults());
-//        http.formLogin(AbstractHttpConfigurer::disable);
-//        http.anonymous(AbstractHttpConfigurer::disable);
-//        http.csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 

@@ -1,19 +1,24 @@
 package org.maslov.bot.app.bot;
 
+import okhttp3.OkHttpClient;
 import org.maslov.bot.app.games.BotEngine;
 import org.maslov.bot.app.metrics.BotMetricsService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
+
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
+
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Profile("dev")
 public class LongPollingBot implements LongPollingSingleThreadUpdateConsumer {
 
     private final String botToken;
@@ -43,9 +48,6 @@ public class LongPollingBot implements LongPollingSingleThreadUpdateConsumer {
     public void consume(Update update) {
         collectMetrics();
         if (update.hasMessage() && update.getMessage().hasText()) {
-            // Set variables
-//            String message_text = update.getMessage().getText();
-//            long chat_id = update.getMessage().getChatId();
             var msgs = botEngine.consume(update);
             msgs.forEach(
                     msg -> {
@@ -56,7 +58,6 @@ public class LongPollingBot implements LongPollingSingleThreadUpdateConsumer {
                         }
                     }
             );
-
         }
     }
 
