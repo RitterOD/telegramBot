@@ -78,9 +78,13 @@ public class DefaultBotEngine implements BotEngine {
                     //
                 }
             } else if (STOP_CMD.equals(text)) {
-                user.getState().setActivity(null);
-                user.getState().setStatus(UserStatus.IDLE);
-                rv = buildListMessage(chatId,"Игра прекращена");
+                if (user.getState().getStatus() == UserStatus.IDLE) {
+                    rv = buildListMessage(chatId, getNotInGameMessageForStopCmd());
+                } else {
+                    user.getState().setActivity(null);
+                    user.getState().setStatus(UserStatus.IDLE);
+                    rv = buildListMessage(chatId, "Игра прекращена");
+                }
             } else {
                 if (user.getState().getActivity() != null) {
                     var activity = user.getState().getActivity();
@@ -117,5 +121,12 @@ public class DefaultBotEngine implements BotEngine {
                 .chatId(chatId)
                 .text(text)
                 .build());
+    }
+
+    private String getNotInGameMessageForStopCmd() {
+        return """
+                Сейчас вы не в игре, чтобы начать игру наберите  /start.
+                Помощь /help
+                """;
     }
 }
