@@ -11,6 +11,8 @@ docker login -u ritterod
 
 docker build -t ritterod/interval_bot:demo_1 .
 
+docker push ritterod/interval_bot:demo_1
+
 docker build -t interval_bot:demo_1
 
 docker-compose pull
