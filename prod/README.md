@@ -15,6 +15,8 @@ docker push ritterod/interval_bot:demo_1
 
 docker build -t interval_bot:demo_1
 
+docker logs <id or name>
+
 docker-compose pull
 
 

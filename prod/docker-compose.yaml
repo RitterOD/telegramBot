@@ -1,6 +1,6 @@
 services:
   bot-app:
-    image: ritterod/interval_bot:demo_2
+    image: ritterod/interval_bot:demo_3
     labels:
       - "traefik.http.routers.bot-app.rule=Host(`bot.${HOST}`)"
       - "traefik.http.services.bot-app.loadbalancer.server.port=8080"
@@ -9,6 +9,9 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${PG_DB}
       SPRING_DATASOURCE_USERNAME: ${PG_USER}
       SPRING_DATASOURCE_PASSWORD: ${PG_PASSWORD}
+      SPRING_BOOT_APPS_ACTIVE_PROFILE: ${SPRING_BOOT_APPS_ACTIVE_PROFILE}
+    env_file:
+        ./.env
     depends_on:
       - postgres #
     networks:
