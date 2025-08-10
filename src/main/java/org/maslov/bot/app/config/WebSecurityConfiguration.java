@@ -4,8 +4,11 @@ import org.maslov.bot.app.dao.repository.UserRepository;
 import org.maslov.bot.app.model.user.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,9 +35,11 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                .requestMatchers("/bot/**").permitAll()
+                .requestMatchers("/bot","/bot**").permitAll()
                 .anyRequest().authenticated());
         http.httpBasic(withDefaults());
+        // Fix in next version
+        http.csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 
