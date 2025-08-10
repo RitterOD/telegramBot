@@ -75,7 +75,7 @@ public class DefaultBotEngine implements BotEngine {
                     rv = List.of(message);
 
                 } else {
-                    //
+                   rv = buildListMessage(chatId, getInGameMessageForStartCmd());
                 }
             } else if (STOP_CMD.equals(text)) {
                 if (user.getState().getStatus() == UserStatus.IDLE) {
@@ -126,6 +126,13 @@ public class DefaultBotEngine implements BotEngine {
     private String getNotInGameMessageForStopCmd() {
         return """
                 Сейчас вы не в игре, чтобы начать игру наберите  /start.
+                Помощь /help
+                """;
+    }
+
+    private String getInGameMessageForStartCmd() {
+        return """
+                Сейчас вы не в игре, чтобы завершить игру наберите  /stop.
                 Помощь /help
                 """;
     }
