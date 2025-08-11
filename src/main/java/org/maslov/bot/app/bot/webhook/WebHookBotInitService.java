@@ -19,7 +19,7 @@ public class WebHookBotInitService {
     public WebHookBotInitService(TelegramBotsSpringWebhookApplication telegramBotsSpringWebhookApplication, WebHookBot webHookBot) {
         webhookApplication = telegramBotsSpringWebhookApplication;
         try {
-            webhookApplication.registerBot("/bot", (Update update) -> {
+            webhookApplication.registerBot("bot", (Update update) -> {
                 return webHookBot.consumeUpdate(update);
             }, () -> {
                 webHookBot.runSetWebhook();
