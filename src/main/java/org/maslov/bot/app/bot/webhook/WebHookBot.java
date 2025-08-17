@@ -43,7 +43,7 @@ public class WebHookBot {
 
     public void runSetWebhook() {
         try {
-            var url = host + getBotPath();
+            var url = "bot." + host + getBotPath();
             log.info("Set web hook on url: {}", url);
             telegramClient.execute(SetWebhook
                     .builder()
