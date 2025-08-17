@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DefaultTagService implements TagService {
@@ -38,5 +39,10 @@ public class DefaultTagService implements TagService {
         var entitySlice = tagRepository.findAll(pageable);
         var content = entitySlice.stream().map(e -> modelMapper.map(e, TagResponseDto.class)).toList();
         return new SliceImpl<>(content,pageable, entitySlice.hasNext());
+    }
+
+    @Override
+    public TagResponseDto findById(UUID id) {
+        return modelMapper.map(tagRepository.findById(id), TagResponseDto.class);
     }
 }
