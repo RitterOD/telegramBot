@@ -1,65 +1,93 @@
 package org.maslov.bot.app.config;
 
+
+import org.maslov.bot.app.auth.JwtTokenProvider;
+import org.maslov.bot.app.auth.component.JwtAuthenticationFilter;
+import org.maslov.bot.app.auth.controllers.ErrorResponseHandler;
 import org.maslov.bot.app.dao.repository.UserRepository;
-import org.maslov.bot.app.model.user.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.security.config.Customizer.withDefaults;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration {
 
-    private final UserRepository userRepository;
+    public static final String SIGNIN_ENTRY_POINT = "/auth/signin";
+    public static final String SIGNUP_ENTRY_POINT = "/auth/signup";
 
-    public WebSecurityConfiguration(UserRepository userRepository) {
+    public static final String TOKEN_REFRESH_ENTRY_POINT = "/auth/refreshToken";
+
+    private final UserRepository userRepository;
+    private final ErrorResponseHandler accessDeniedHandler;
+
+    private final HandlerExceptionResolver handlerExceptionResolver;
+
+    private final JwtTokenProvider jwtTokenProvider;
+
+    private final UserDetailsService userDetailsService;
+
+    public WebSecurityConfiguration(UserRepository userRepository, ErrorResponseHandler accessDeniedHandler, HandlerExceptionResolver handlerExceptionResolver, JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService) {
         this.userRepository = userRepository;
+        this.accessDeniedHandler = accessDeniedHandler;
+        this.handlerExceptionResolver = handlerExceptionResolver;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                .requestMatchers("/bot","/bot**", "/actuator", "/actuator**", "/actuator/prometheus**").permitAll()
-                .anyRequest().authenticated());
-        http.httpBasic(withDefaults());
-        // Fix in next version
-        http.csrf(AbstractHttpConfigurer::disable);
+    @Order(1) // Process JWT chain first for API endpoints
+    public SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
+        http
+//                .securityMatcher("/api/**") // Apply to API endpoints
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for stateless API
+                .exceptionHandling(configurer -> configurer
+                        .accessDeniedHandler(accessDeniedHandler))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        .requestMatchers("/bot", "/bot**", "/actuator", "/actuator**", "/actuator/prometheus**", "/auth/**").permitAll()
+                        .anyRequest().authenticated())
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService, handlerExceptionResolver), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
+//    @Bean
+//    @Order(2)
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+//                .anyRequest().authenticated());
+//        http.httpBasic(withDefaults());
+//        // Fix in next version
+//        http.csrf(AbstractHttpConfigurer::disable);
+//        return http.build();
+//    }
+
+
+
     @Bean
-    public UserDetailsService jpaUserDetailsService() {
-        return username -> {
-            User user = userRepository.findByUsernameIgnoreCase(username)
-                    .orElseThrow(() -> new UsernameNotFoundException(String.format("User %s not found", username)));
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
 
-            List<GrantedAuthority> grantedAuthorities = user
-                    .getAuthorities().stream()
-                    .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
-                    .collect(Collectors.toList());
-
-            return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
-                    .password(user.getPassword())
-                    .authorities(grantedAuthorities)
-                    .disabled(!Boolean.TRUE.equals(user.isEnabled()))
-                    .build();
-        };
+    @Bean
+    AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
     }
 
 
