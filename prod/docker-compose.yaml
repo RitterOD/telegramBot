@@ -5,6 +5,9 @@ services:
       - "traefik.http.routers.bot-app.rule=Host(`bot.${HOST}`)"
       - "traefik.http.services.bot-app.loadbalancer.server.port=8080"
       - "traefik.docker.network=bot_app"
+      - "traefik.http.routers.bot-app.entrypoints=websecure"
+      - "traefik.http.routers.bot-app.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.bot-app.tls=true"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${PG_DB}
       SPRING_DATASOURCE_USERNAME: ${PG_USER}
