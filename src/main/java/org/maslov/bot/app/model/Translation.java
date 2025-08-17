@@ -26,7 +26,7 @@ public class Translation {
     private LangCode to;
 
 
-    @Column(name = "word", nullable = false, unique = true)
+    @Column(name = "word", nullable = false)
     private String word;
 
     @Column(name = "word_transcription")
@@ -37,6 +37,58 @@ public class Translation {
 
     @OneToMany(mappedBy = "translation")
     private Set<TranslationToTagLink> translationToTagLinks = new LinkedHashSet<>();
+
+    @Column(name = "telegram_user_id")
+    private Long telegramUserId;
+
+    @Column(name = "technical_user_id")
+    private UUID technicalUserId;
+
+    @Column(name = "to_translate_clue")
+    private String toTranslateClue;
+
+    @Column(name = "from_translate_clue")
+    private String fromTranslateClue;
+
+    public String getToTranslateClue() {
+        return toTranslateClue;
+    }
+
+    public void setToTranslateClue(String toTranslateClue) {
+        this.toTranslateClue = toTranslateClue;
+    }
+
+    public String getFromTranslateClue() {
+        return fromTranslateClue;
+    }
+
+    public void setFromTranslateClue(String fromTranslateClue) {
+        this.fromTranslateClue = fromTranslateClue;
+    }
+
+    public LangCode getTo() {
+        return to;
+    }
+
+    public void setTo(LangCode to) {
+        this.to = to;
+    }
+
+    public Long getTelegramUserId() {
+        return telegramUserId;
+    }
+
+    public void setTelegramUserId(Long telegramUserId) {
+        this.telegramUserId = telegramUserId;
+    }
+
+    public UUID getTechnicalUserId() {
+        return technicalUserId;
+    }
+
+    public void setTechnicalUserId(UUID technicalUserId) {
+        this.technicalUserId = technicalUserId;
+    }
 
 
     public String getWordTranscription() {

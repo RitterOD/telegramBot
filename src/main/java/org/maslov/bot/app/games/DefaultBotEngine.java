@@ -59,14 +59,14 @@ public class DefaultBotEngine implements BotEngine {
      * */
     private List<SendMessage> process(TelegramUser user, Update update) {
         final var chatId = update.getMessage().getChatId();
+        final var userId = update.getMessage().getFrom().getId();
         List<SendMessage> rv = List.of(buildMessage(chatId, ""));
         if (update.getMessage().hasText()) {
             var text = update.getMessage().getText();
             if (START_CMD.equals(text)) {
                 if (user.getState().getActivity() == null) {
                     // TODO REFACTOR remove dependency from activity implementation
-                    Activity game = randomGameService.creatRandomGame();
-//                    gameMap.put(userId, game);
+                    Activity game = randomGameService.creatRandomGame(userId);
                     var initialMsg = randomGameService.getInitialMessage(game);
                     game = randomGameService.setState(game, randomGameService.getInitialActivityState());
                     user.getState().setActivity(game);

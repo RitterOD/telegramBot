@@ -36,6 +36,17 @@ public class DefaultRandomGameService implements RandomGameService {
     }
 
     @Override
+    public RandomWordGame creatRandomGame(Long telegramUserId) {
+        long cnt = translationRepository.countAllByTelegramUserId(telegramUserId);
+        if (cnt < DEFAULT_RANDOM_GAME_AMOUNT) {
+            return creatRandomGame();
+        } else {
+            var lst = translationRepository.findRandomNWithTelegramUserId(DEFAULT_RANDOM_GAME_AMOUNT, telegramUserId);
+            return new RandomWordGame(lst.stream().map(this::generateRandomStage).collect(Collectors.toList()));
+        }
+    }
+
+    @Override
     public String getInitialMessage(Activity activity) {
         if (activity instanceof RandomWordGame g) {
             return g.getInitialMessage() + "\n" + g.getCurrentStageMessage();

@@ -35,7 +35,7 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                .requestMatchers("/bot","/bot**").permitAll()
+                .requestMatchers("/bot","/bot**", "/actuator", "/actuator**", "/actuator/prometheus**").permitAll()
                 .anyRequest().authenticated());
         http.httpBasic(withDefaults());
         // Fix in next version

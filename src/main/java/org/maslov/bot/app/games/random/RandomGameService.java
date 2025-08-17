@@ -7,6 +7,8 @@ import org.maslov.bot.app.games.random.model.RandomWordGame;
 public interface RandomGameService {
     RandomWordGame creatRandomGame();
 
+    RandomWordGame creatRandomGame(Long telegramUserId);
+
     String getInitialMessage(Activity activity);
 
     Activity setState(Activity activity, RandomGameState state);

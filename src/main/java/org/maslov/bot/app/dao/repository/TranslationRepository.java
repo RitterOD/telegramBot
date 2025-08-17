@@ -13,4 +13,10 @@ public interface TranslationRepository extends JpaRepository<Translation, UUID> 
     @Query(value = "select * from word  order by random() limit :amount", nativeQuery = true)
     List<Translation> findRandomN(@Param("amount") Long amount);
 
+
+    @Query(value = "select * from word w where w.telegram_user_id = :userId  order by random() limit :amount", nativeQuery = true)
+    List<Translation> findRandomNWithTelegramUserId(@Param("amount") Long amount, @Param("userId") Long telegramUserId);
+
+    Long countAllByTelegramUserId(Long telegramUserId);
+
 }
