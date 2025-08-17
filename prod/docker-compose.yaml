@@ -1,8 +1,8 @@
 services:
   bot-app:
-    image: ritterod/interval_bot:demo_8
+    image: ritterod/interval_bot:demo_9
     labels:
-      - "traefik.http.routers.bot-app.rule=Host(`bot.${HOST}`) && (Path(`/bot`) || Path('/api'))"
+      - "traefik.http.routers.bot-app.rule=Host(`bot.${HOST}`)"
       - "traefik.http.services.bot-app.loadbalancer.server.port=8080"
       - "traefik.docker.network=bot_app"
     environment:

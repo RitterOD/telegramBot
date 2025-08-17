@@ -56,6 +56,7 @@ public class WebHookBot {
 
 
     public BotApiMethod<?> consumeUpdate(Update update) {
+        log.info("consumeUpdate {}", update.getUpdateId());
         if (update.hasMessage() && update.getMessage().hasText()) {
             var msgs = botEngine.consume(update);
             msgs.forEach(
