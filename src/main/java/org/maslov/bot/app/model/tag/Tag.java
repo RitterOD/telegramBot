@@ -80,4 +80,14 @@ public class Tag extends CommonFields {
     public void setToChildrenLinks(List<TagToTagLink> toChildrenLinks) {
         this.toChildrenLinks = toChildrenLinks;
     }
+
+
+    public Tag addTagLink(Tag childTag) {
+        var link = new TagToTagLink();
+        link.setParentTag(this);
+        link.setChildrenTag(childTag);
+        this.getToChildrenLinks().add(link);
+        childTag.getToParentLinks().add(link);
+        return this;
+    }
 }

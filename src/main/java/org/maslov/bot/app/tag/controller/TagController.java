@@ -2,6 +2,8 @@ package org.maslov.bot.app.tag.controller;
 
 import org.maslov.bot.app.tag.dto.TagDto;
 import org.maslov.bot.app.tag.dto.TagResponseDto;
+import org.maslov.bot.app.tag.dto.request.TagLinkRequest;
+import org.maslov.bot.app.tag.dto.response.TagLinkResponse;
 import org.maslov.bot.app.tag.service.TagService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -38,5 +39,10 @@ public class TagController {
     @GetMapping("/{id}")
     public ResponseEntity<TagResponseDto> get(@PathVariable("id")UUID id) {
         return ResponseEntity.ok(tagService.findById(id));
+    }
+
+    @PostMapping("/link")
+    public ResponseEntity<TagLinkResponse> createTagToTagLink(@RequestBody TagLinkRequest tagLinkRequest) {
+        return ResponseEntity.ok(tagService.createLink(tagLinkRequest));
     }
 }

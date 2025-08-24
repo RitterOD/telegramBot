@@ -3,6 +3,8 @@ package org.maslov.bot.app.tag.service;
 import org.maslov.bot.app.model.tag.Tag;
 import org.maslov.bot.app.tag.dto.TagDto;
 import org.maslov.bot.app.tag.dto.TagResponseDto;
+import org.maslov.bot.app.tag.dto.request.TagLinkRequest;
+import org.maslov.bot.app.tag.dto.response.TagLinkResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
@@ -17,5 +19,5 @@ public interface TagService {
 
     TagResponseDto findById(UUID id);
 
-
+    TagLinkResponse createLink(TagLinkRequest tagLinkRequest);
 }
