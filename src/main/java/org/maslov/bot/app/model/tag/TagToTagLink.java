@@ -19,7 +19,7 @@ public class TagToTagLink extends CommonFields {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_tag_id")
     private Tag parentTag;
 
@@ -47,7 +47,7 @@ public class TagToTagLink extends CommonFields {
         this.childrenTag = childrenTag;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "children_tag_id")
     private Tag childrenTag;
 

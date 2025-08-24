@@ -31,11 +31,11 @@ public class Tag extends CommonFields {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy = "parentTag")
+    @OneToMany(mappedBy ="childrenTag" )
     private List<TagToTagLink> toParentLinks = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "childrenTag")
+    @OneToMany(mappedBy = "parentTag", cascade = CascadeType.ALL)
     private List<TagToTagLink> toChildrenLinks = new ArrayList<>();
 
     @OneToMany(mappedBy = "tag", orphanRemoval = true)

@@ -53,7 +53,7 @@ public class DefaultTagService implements TagService {
     @Transactional
     public TagLinkResponse createLink(TagLinkRequest tagLinkRequest) {
         var parentTag = tagRepository.findById(tagLinkRequest.getParentId()).orElseThrow(() -> new RuntimeException("Parent tag not found"));
-        var childTag = tagRepository.findById(tagLinkRequest.getParentId()).orElseThrow(() -> new RuntimeException("Child tag not found"));
+        var childTag = tagRepository.findById(tagLinkRequest.getChildId()).orElseThrow(() -> new RuntimeException("Child tag not found"));
         var parentLinks = parentTag.getToChildrenLinks();
         parentLinks.forEach(e -> {
             if (e.getChildrenTag().getId().equals(tagLinkRequest.getChildId())) {
@@ -62,6 +62,7 @@ public class DefaultTagService implements TagService {
         });
         parentTag.addTagLink(childTag);
         tagRepository.save(parentTag);
+        tagRepository.save(childTag);
         return modelMapper.map(tagLinkRequest, TagLinkResponse.class);
     }
 }
