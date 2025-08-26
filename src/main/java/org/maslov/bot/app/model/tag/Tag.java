@@ -31,7 +31,7 @@ public class Tag extends CommonFields {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy ="childrenTag" )
+    @OneToMany(mappedBy ="childrenTag", cascade = CascadeType.ALL )
     private List<TagToTagLink> toParentLinks = new ArrayList<>();
 
 
