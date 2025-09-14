@@ -19,4 +19,11 @@ public interface TranslationRepository extends JpaRepository<Translation, UUID> 
 
     Long countAllByTelegramUserId(Long telegramUserId);
 
+    @Query(value = "select w.id from word w where w.telegram_user_id = :userId", nativeQuery = true)
+    List<UUID> findAllTelegramUserTranslationIds(@Param("userId") Long telegramUserId);
+
+
+    @Query(value = "select w.id from word w", nativeQuery = true)
+    List<UUID> findAllIds();
+
 }

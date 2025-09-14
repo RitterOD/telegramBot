@@ -21,10 +21,12 @@ public class DefaultRandomGameService implements RandomGameService {
     private final TranslationRepository translationRepository;
     private final ModelMapper modelMapper;
     private final Random random;
+    private final RandomWordsProviderService randomWordsProviderService;
 
-    public DefaultRandomGameService(TranslationRepository translationRepository, ModelMapper modelMapper) {
+    public DefaultRandomGameService(TranslationRepository translationRepository, ModelMapper modelMapper, RandomWordsProviderService randomWordsProviderService) {
         this.translationRepository = translationRepository;
         this.modelMapper = modelMapper;
+        this.randomWordsProviderService = randomWordsProviderService;
         this.random = new Random();
     }
 
@@ -37,13 +39,9 @@ public class DefaultRandomGameService implements RandomGameService {
 
     @Override
     public RandomWordGame creatRandomGame(Long telegramUserId) {
-        long cnt = translationRepository.countAllByTelegramUserId(telegramUserId);
-        if (cnt < DEFAULT_RANDOM_GAME_AMOUNT) {
-            return creatRandomGame();
-        } else {
-            var lst = translationRepository.findRandomNWithTelegramUserId(DEFAULT_RANDOM_GAME_AMOUNT, telegramUserId);
-            return new RandomWordGame(lst.stream().map(this::generateRandomStage).collect(Collectors.toList()));
-        }
+        var lst = randomWordsProviderService.findRandomNWithTelegramUserId(DEFAULT_RANDOM_GAME_AMOUNT,
+                telegramUserId);
+        return new RandomWordGame(lst.stream().map(this::generateRandomStage).collect(Collectors.toList()));
     }
 
     @Override
