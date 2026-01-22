@@ -3,3 +3,9 @@ spring.config.activate.on-profile=dev
 telegram.bot.token=${TLG_BOT_TOKEN}
 spring.jpa.hibernate.ddl-auto=update
 management.endpoints.web.exposure.include=health,metrics,prometheus
+
+security.jwt.secret=hjdksfhsldkfh
+security.jwt.tokenExpirationTime=1000000
+security.jwt.refreshTokenExpirationTime=20000000
+
+spring.docker.compose.file=file:./path/to/your-custom-file.yml
