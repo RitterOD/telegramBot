@@ -1,0 +1,21 @@
+services:
+  postgres:
+    container_name: postgres_container
+    image: 'postgres:16.3'
+    environment:
+      - 'POSTGRES_DB=bot_app'
+      - 'POSTGRES_PASSWORD=dev'
+      - 'POSTGRES_USER=dev'
+    ports:
+      - "5433:5432"
+    volumes:
+      -  bot_app_postgres:/var/lib/postgresql/data
+    networks:
+      - bot_app
+
+volumes:
+  bot_app_postgres:
+
+networks:
+  bot_app:
+    driver: bridge

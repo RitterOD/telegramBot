@@ -7,6 +7,7 @@ import org.maslov.bot.app.auth.controllers.ErrorResponseHandler;
 import org.maslov.bot.app.dao.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -50,6 +51,7 @@ public class WebSecurityConfiguration {
     }
 
     @Bean
+    @Profile("prod")
     @Order(1) // Process JWT chain first for API endpoints
     public SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
         http
@@ -60,6 +62,34 @@ public class WebSecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers("/bot", "/bot**", "/actuator", "/actuator**", "/actuator/prometheus**", "/auth/**").permitAll()
+                        .anyRequest().authenticated())
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService, handlerExceptionResolver), UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+
+    @Bean
+    @Profile("dev")
+    @Order(1)
+    public SecurityFilterChain devJwtFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for stateless API
+                .exceptionHandling(configurer -> configurer
+                        .accessDeniedHandler(accessDeniedHandler))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        .requestMatchers(
+                                "/**",
+                                "/bot",
+                                "/bot**",
+                                "/actuator",
+                                "/actuator**",
+                                "/actuator/prometheus**",
+                                "/auth/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**", "/swagger-ui.html",
+                                 "/swagger-resources/**",
+                                 "/webjars/**")
+                        .permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService, handlerExceptionResolver), UsernamePasswordAuthenticationFilter.class);
         return http.build();
