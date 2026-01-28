@@ -16,7 +16,7 @@ public class TagControllerIntegrationTest {
 
     @Container // Manages the container lifecycle
     @ServiceConnection // Automatically configures Spring datasource properties
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine"); // Use a specific version
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16.3"); // Use a specific version
 
     @Test
     void contextLoads() {
