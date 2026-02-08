@@ -1,7 +1,10 @@
 package org.maslov.bot.app.tag.dto.request;
 
+import lombok.Builder;
+
 import java.util.UUID;
 
+@Builder
 public class TranslationToTagLinkRequest {
     private UUID tagId;
     private UUID translationId;
