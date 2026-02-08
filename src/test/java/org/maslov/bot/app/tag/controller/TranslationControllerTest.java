@@ -6,6 +6,7 @@ import org.maslov.bot.app.model.LangCode;
 import org.maslov.bot.app.tag.dto.request.TranslationRequest;
 import org.maslov.bot.app.tag.dto.response.TranslationResponse;
 import org.maslov.bot.app.utils.CustomPageImpl;
+import org.maslov.bot.integration.AbstractControllerIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -27,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-class TranslationControllerTest {
+class TranslationControllerTest extends AbstractControllerIntegrationTest {
 
     @Container // Manages the container lifecycle
     @ServiceConnection // Automatically configures Spring datasource properties
@@ -42,6 +43,29 @@ class TranslationControllerTest {
         // and the database connection is established via Testcontainers
         assertThat(postgres.isRunning()).isTrue();
         // You can add repository tests here (e.g., save and retrieve data)
+    }
+
+    private ResponseEntity<TranslationResponse> createTestTranslation() {
+        TranslationRequest translationRequest = TranslationRequest.builder()
+                .from(LangCode.ENG)
+                .to(LangCode.RU)
+                .word("cosines")
+                .translation("уют")
+                .build();
+
+        URI uri = UriComponentsBuilder.fromPath(TranslationController.ROOT_URL)
+                .build().toUri();
+        ResponseEntity<TranslationResponse> responseEntity = restTemplate.exchange(
+                uri,
+                HttpMethod.POST,
+                new HttpEntity<>(translationRequest),
+                new ParameterizedTypeReference<TranslationResponse>() {
+                }
+        );
+        assertThat(responseEntity.getStatusCode().is2xxSuccessful()).isTrue();
+        assertNotNull(responseEntity.getBody().getWord());
+        assertEquals(responseEntity.getBody().getWord(), "cosines");
+        return responseEntity;
     }
 
     @Test
@@ -90,25 +114,7 @@ class TranslationControllerTest {
 
     @Test
     void create() {
-        TranslationRequest translationRequest = TranslationRequest.builder()
-                .from(LangCode.ENG)
-                .to(LangCode.RU)
-                .word("cosines")
-                .translation("уют")
-                .build();
-
-        URI uri = UriComponentsBuilder.fromPath(TranslationController.ROOT_URL)
-                .build().toUri();
-        ResponseEntity<TranslationResponse> responseEntity = restTemplate.exchange(
-                uri,
-                HttpMethod.POST,
-                new HttpEntity<>(translationRequest),
-                new ParameterizedTypeReference<TranslationResponse>() {
-                }
-        );
-        assertThat(responseEntity.getStatusCode().is2xxSuccessful()).isTrue();
-        assertNotNull(responseEntity.getBody().getWord());
-        assertEquals(responseEntity.getBody().getWord(), "cosines");
+        createTestTranslation();
     }
 
     @Test
@@ -121,9 +127,35 @@ class TranslationControllerTest {
 
     @Test
     void delete() {
+        var testTranslation = createTestTranslation();
+        URI uri = UriComponentsBuilder.fromPath(TranslationController.ROOT_URL)
+                .pathSegment("{id}")
+                .buildAndExpand(Map.of("id", testTranslation.getBody().getId()))
+                .encode()
+                .toUri();
+        ResponseEntity<TranslationResponse> responseEntity = restTemplate.exchange(
+                uri,
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<TranslationResponse>() {
+                } // Custom type reference
+        );
+        assertThat(responseEntity.getStatusCode().is2xxSuccessful()).isTrue();
+        assertNotNull(responseEntity.getBody().getWord());
+        assertEquals(responseEntity.getBody().getWord(), "cosines");
     }
 
     @Test
     void deleteMany() {
+    }
+
+    @Override
+    public void buildTestEnvironment() {
+        // do nothing
+    }
+
+    @Override
+    public void clearTestEnvironment() {
+        // do nothing
     }
 }
