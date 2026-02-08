@@ -84,12 +84,13 @@ public class TranslationService {
     }
 
     @Transactional
-    public TranslationResponse delete(UUID id) {
+    public Optional<TranslationResponse> delete(UUID id) {
         Translation translation = translationRepository.findById(id).orElse(null);
         if (translation != null) {
             translationRepository.delete(translation);
+            return Optional.of(modelMapper.map(translation, TranslationResponse.class));
         }
-        return modelMapper.map(translation, TranslationResponse.class);
+       return Optional.empty();
     }
 
     public void deleteMany(List<UUID> ids) {

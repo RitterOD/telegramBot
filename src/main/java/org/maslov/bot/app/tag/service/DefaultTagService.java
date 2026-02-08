@@ -5,8 +5,10 @@ import org.maslov.bot.app.tag.dto.TagDto;
 import org.maslov.bot.app.tag.dto.TagResponseDto;
 import org.maslov.bot.app.tag.dto.request.TagLinkRequest;
 import org.maslov.bot.app.tag.dto.response.TagLinkResponse;
+import org.maslov.bot.app.tag.dto.response.TranslationResponse;
 import org.maslov.bot.app.tag.repository.TagRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -38,15 +41,24 @@ public class DefaultTagService implements TagService {
     }
 
     @Override
-    public Slice<TagResponseDto> findAll(Pageable pageable) {
-        var entitySlice = tagRepository.findAll(pageable);
-        var content = entitySlice.stream().map(e -> modelMapper.map(e, TagResponseDto.class)).toList();
-        return new SliceImpl<>(content, pageable, entitySlice.hasNext());
+    public Page<TagResponseDto> findAll(Pageable pageable) {
+        return tagRepository.findAll(pageable).map(entity -> modelMapper.map(entity, TagResponseDto.class));
     }
 
     @Override
     public TagResponseDto findById(UUID id) {
         return modelMapper.map(tagRepository.findById(id), TagResponseDto.class);
+    }
+
+    @Override
+    @Transactional
+    public Optional<TagResponseDto> delete(UUID id) {
+        var tag = tagRepository.findById(id).orElse(null);;
+        if (tag != null) {
+            tagRepository.delete(tag);
+            return Optional.of(modelMapper.map(tag, TagResponseDto.class));
+        }
+        return Optional.empty();
     }
 
     @Override

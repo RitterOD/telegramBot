@@ -61,7 +61,7 @@ public class TranslationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<TranslationResponse> delete(@PathVariable UUID id) {
-        return ResponseEntity.ok(translationService.delete(id));
+        return translationService.delete(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping

@@ -1,5 +1,6 @@
 package org.maslov.bot.app.tag.dto;
 
+import lombok.Builder;
 import lombok.Value;
 
 import java.util.UUID;
@@ -7,6 +8,7 @@ import java.util.UUID;
 /**
  * DTO for {@link org.maslov.bot.app.model.tag.Tag}
  */
+@Builder
 public class TagDto {
     String name;
     String description;

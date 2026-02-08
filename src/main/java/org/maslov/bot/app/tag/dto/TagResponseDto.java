@@ -15,7 +15,7 @@ public class TagResponseDto {
 
     Date created;
     Date updated;
-    String id;
+    UUID id;
     String name;
 
     public String getName() {
@@ -38,11 +38,11 @@ public class TagResponseDto {
         this.updated = updated;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
